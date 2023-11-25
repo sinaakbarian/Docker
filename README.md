@@ -1,57 +1,74 @@
 # Docker
 
-This is repo for docker impletation and understanding
-summary of the 3 hours video here: https://www.youtube.com/watch?v=3c-iBn73dDE
-what is container?  a way to package an application with all the necessary dependencies and configuration 
-container lives in the container repository and and if you go to docker hub websire you could find official and non official container images
-with container we do not need to install packages in the operating system and other team member will just use the docker and they do not need to have different packages
-container is stack images on each other what is image here?
-base image -> linux
-on top we have apllication image
+This repository serves as a guide to Docker implementation and understanding.
 
-docker Image is artifact in running aroung and docker container is when it is running docker ps showing all the running docker 
+## Summary of the 3-Hour Video
+For a comprehensive overview, check out the [3-hour video](https://www.youtube.com/watch?v=3c-iBn73dDE).
 
+## What is a Container?
+A container is a way to package an application with all necessary dependencies and configurations. Containers reside in a container repository, such as Docker Hub, where you can find official and non-official container images. Using containers eliminates the need to install packages in the operating system, promoting consistency across team members.
 
+Containers stack images on top of each other. The base image is typically the Linux OS, and on top of it, application images are layered.
 
-docker vs virtual machine? size docker image is smaller since it does not have os kernel so it is faster as well since it only have on top
+### Docker Image vs. Container
+- **Docker Image**: An artifact that is stationary.
+- **Docker Container**: The image in action. Running containers can be viewed using `docker ps`.
 
-commen docker comments:
+### Docker vs. Virtual Machine
+Docker images are smaller and faster than virtual machines since they lack an OS kernel. Containers only have what's necessary, making them efficient.
 
-docker pull package name to install docker Image e.g. docker pulll redis
-and then to check images on the systems s docksr images on terminal if you provide sepecific version you need to identify it if we need redis run it we need to creat container of the images and we could do it by docker run package e.g. docker run redis this pull and start and to check the running container we need to do docker ps to run container in detachmode you need to use -d 
+### Common Docker Commands
+- `docker pull <package>`: Install Docker image (e.g., `docker pull redis`).
+- `docker images`: Check images on the system.
+- `docker run <package>`: Pull and start a container.
+- `docker ps`: List all running containers.
+- `docker stop <container_id>`: Stop a running container.
+- `docker start <container_id>`: Start a stopped container.
+- `docker ps -a`: Show all running or non-running containers.
+- `docker run <package>:<version>`: Specify the version when running a container.
+- `docker run -d <package>`: Run a container in detach mode.
+- `docker exec -it <container_id> /bin/bash`: Access an interactive terminal of a running container.
 
-to reset container we could to docker stop docker id and then use the same id to start again docker start docker id
+### Connecting Ports
+- To bind host ports to a laptop: `docker run -p <our_port>:<host_port> <package>`.
 
-docker ps -a showing all runing or non runing
-docker run redis:4.0 indicate version 
-to be able to connect the ports to bind the host to our lsptop we need to specify the ports and forward it e.g. docker run -p ourpor:hostport package name 
+### Naming Containers
+- Use `--name` to name containers for easier identification.
 
-if you don't want work with container id you can nme them properly add --name to run
-we could get   interactive terminal of the docker docker exect -it container id /bin/bash
-using this for debauging container
+### Docker Compose
+- Organize with a `.yaml` file (Docker Compose file).
+- Use `docker-compose -f <name.yaml> up` to start services defined in the Compose file.
+- Use `docker-compose down` to shut down services.
 
-how to use it?
+## Building and Testing Code with Docker
+1. Develop code.
+2. Test using Docker.
+3. Commit with CI (e.g., Jenkins).
 
-let say you build python code you push the code and then you push jenkinse we have 
+### Dockerfile
+To build a Docker image, create a Dockerfile:
+```Dockerfile
+FROM node
+ENV NODE_ENV=production
+RUN mkdir -p /home/app
+COPY ./home/app
+CMD ["node", "server.js"]
+```
 
-docker need to creat newwork to connect to make mango network to mango db once we creat docker network creat name
-then we do docker run -p27017: -d -e username and pass word mango --name mangodb --net networkname that we cratedd
+### Build an Image
+- `docker build -t <tag> .`: Build an image in the current directory.
 
-we can write write docker compuse to have everything to make everthing organize which is .yaml file it will also take care the network so we donot need to do this independent how to use the docker container if  we have docker compuse, we should use docker-compose -f name.yaml up and if we use down if will shut them down
+## Private Repositories with Amazon ECR
+1. Create an Elastic Container Registry (ECR) in AWS.
+2. Push to a private repository:
+   - `docker login` (AWS command).
+   - Tag the image: `docker tag <image> <registryDomain>/<imageName>:<tag>`.
+   - Push the image: `docker push <registryDomain>/<imageName>:<tag>`.
 
+## Deployment
+Add your app to a YAML file, specifying the image. Perform `docker login` before deployment.
 
-to build and docker image your own code first develop code then use docker to test it then to commit it you need to use CI jenkinse
-In order to build a docker image we need to creat a docker file the first line is FROM node (for java) so we need to use docker that already have node "chat gpt provide python example as well" then ENV to define enviroment variable then RUN to execute linux comment RUN mkdir -p /home/app and then COPY ./homr/app and last one is CMD["node","server.js"]
-the difference cmd and run is enry point but run is not
-
-to biuld an docker image docjer build -t tag of the image and then directory to build . means currantdirectory
-
-how build private repo using amazon ECR first creat docker registery elastic container registery  then ve can use two approache to push the push the private repo use docker login which is aws command and once you successfully login you can push your image and then you need to tag your image regiteryDomain/imageName:tag in aws ecr we have to tag the image to include the repo we want to push it means it wiill rename it properly and then docker push and new name : tag
-
-now deploy we need to add our app to yaml fle which is our image "chat gpt prove example here"
-and we need to do docker login as well
-
-
-the last thing is docker volum when we want to save data e.g. database. we could run -v to define where folder mount or -v name:address and then you can use just by name eveen in docker compuse you could put on the yaml file
-
-
+## Docker Volumes
+When saving data, use:
+- `-v <folder_mount>` or `-v <name>:<address>`.
+- In Docker Compose, define volumes in the YAML file.
