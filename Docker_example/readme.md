@@ -1,5 +1,3 @@
-
-```markdown
 # Machine Learning Example with Docker
 
 This repository contains a simple machine learning project that uses linear regression to estimate a number. The project is containerized using Docker for easy deployment and reproducibility.
@@ -64,5 +62,3 @@ This will start the containerized application, and you can interact with it as n
 
 Feel free to modify the code in `main.py` and update the dependencies in `requirements.txt` according to your project requirements.
 
-Happy coding!
-```
